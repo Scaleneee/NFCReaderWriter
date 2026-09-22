@@ -60,4 +60,28 @@ object NFCWriter {
             runCatching { formatable.close() }
         }
     }
+
+    fun makeReadOnly(tag: Tag): NfcResult<String> {
+        val ndef = Ndef.get(tag)
+            ?: return NfcResult.Error("This tag does not expose standard NDEF data and cannot be locked by this app.")
+        return try {
+            ndef.connect()
+            when {
+                !ndef.isWritable -> NfcResult.Error("This tag is already read-only.")
+                !ndef.canMakeReadOnly() -> NfcResult.Error("This tag does not support being made permanently read-only.")
+                // Android delegates this irreversible operation to the tag technology.
+                // There is no API to undo it after the tag confirms the lock command.
+                ndef.makeReadOnly() -> NfcResult.Success("NFC tag is now permanently read-only")
+                else -> NfcResult.Error("The tag did not confirm the permanent read-only operation.")
+            }
+        } catch (_: SecurityException) {
+            NfcResult.Error("The tag was removed too quickly. Hold it still and try again.")
+        } catch (_: IOException) {
+            NfcResult.Error("The tag connection was lost before it could be locked.")
+        } catch (error: Exception) {
+            NfcResult.Error(error.message ?: "The tag could not be made read-only.")
+        } finally {
+            runCatching { ndef.close() }
+        }
+    }
 }

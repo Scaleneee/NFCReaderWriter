@@ -25,4 +25,6 @@ class NFCManager(context: Context) {
 
     fun clear(tag: Tag, verify: Boolean): NfcResult<String> =
         NFCWriter.write(tag, NdefUtils.emptyMessage(), verify)
+
+    fun makeReadOnly(tag: Tag): NfcResult<String> = NFCWriter.makeReadOnly(tag)
 }

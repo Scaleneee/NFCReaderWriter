@@ -46,6 +46,7 @@ private sealed interface SessionMode {
     data object CopySource : SessionMode
     data class CopyDestination(val message: NdefMessage, val preview: String) : SessionMode
     data object Clear : SessionMode
+    data object Lock : SessionMode
 }
 
 class AppViewModel(application: Application) : AndroidViewModel(application) {
@@ -135,6 +136,18 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun beginLock() {
+        if (!ensureNfcReady()) return
+        sessionMode = SessionMode.Lock
+        _uiState.update {
+            it.copy(
+                waitingMessage = "Hold the NFC tag you want to make permanently read-only near your phone",
+                operationMessage = null,
+                operationSuccessful = null
+            )
+        }
+    }
+
     fun cancelSession() {
         sessionMode = SessionMode.Idle
         _uiState.update { it.copy(waitingMessage = null, isBusy = false) }
@@ -155,6 +168,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
                 SessionMode.CopySource -> handleCopySource(tag)
                 is SessionMode.CopyDestination -> handleWrite(tag, mode.message, OperationType.COPY, mode.preview)
                 SessionMode.Clear -> handleClear(tag)
+                SessionMode.Lock -> handleLock(tag)
                 SessionMode.Idle -> Unit
             }
         }
@@ -225,6 +239,13 @@ class AppViewModel(application: Application) : AndroidViewModel(application) {
         when (val result = nfcManager.clear(tag, _uiState.value.automaticallyVerify)) {
             is NfcResult.Success -> finishWithSuccess("NFC tag cleared successfully", OperationType.CLEAR, "NDEF data removed")
             is NfcResult.Error -> finishWithError(result.message, OperationType.CLEAR)
+        }
+    }
+
+    private fun handleLock(tag: Tag) {
+        when (val result = nfcManager.makeReadOnly(tag)) {
+            is NfcResult.Success -> finishWithSuccess(result.value, OperationType.LOCK, "Tag made permanently read-only")
+            is NfcResult.Error -> finishWithError(result.message, OperationType.LOCK)
         }
     }
 

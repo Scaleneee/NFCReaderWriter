@@ -36,6 +36,7 @@ import com.example.nfcreaderwriter.ui.clear.ClearScreen
 import com.example.nfcreaderwriter.ui.copy.CopyScreen
 import com.example.nfcreaderwriter.ui.history.HistoryScreen
 import com.example.nfcreaderwriter.ui.home.HomeScreen
+import com.example.nfcreaderwriter.ui.lock.LockScreen
 import com.example.nfcreaderwriter.ui.qr.NfcToQrScreen
 import com.example.nfcreaderwriter.ui.qr.QrToNfcScreen
 import com.example.nfcreaderwriter.ui.read.ReadScreen
@@ -59,7 +60,8 @@ private val routeTitles = mapOf(
     "qr_to_nfc" to "Scan QR Code",
     "nfc_to_qr" to "NFC to QR",
     "copy" to "Copy NFC",
-    "clear" to "Clear NFC"
+    "clear" to "Clear NFC",
+    "lock" to "Lock NFC"
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -138,6 +140,7 @@ fun AppNavigation(state: AppUiState, viewModel: AppViewModel) {
             composable("nfc_to_qr") { NfcToQrScreen(state, viewModel) }
             composable("copy") { CopyScreen(state, viewModel) }
             composable("clear") { ClearScreen(state, viewModel) }
+            composable("lock") { LockScreen(state, viewModel) }
         }
     }
 }

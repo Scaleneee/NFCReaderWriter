@@ -20,6 +20,7 @@ import androidx.compose.material.icons.outlined.AutoDelete
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Edit
 import androidx.compose.material.icons.outlined.Nfc
+import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.QrCode
 import androidx.compose.material.icons.outlined.QrCodeScanner
 import androidx.compose.material3.Card
@@ -54,7 +55,8 @@ fun HomeScreen(
         HomeFeature("QR → NFC", "Scan a QR code and write it", Icons.Outlined.QrCodeScanner, "qr_to_nfc"),
         HomeFeature("NFC → QR", "Turn tag content into a QR", Icons.Outlined.QrCode, "nfc_to_qr"),
         HomeFeature("Copy NFC", "Copy standard NDEF records", Icons.Outlined.ContentCopy, "copy"),
-        HomeFeature("Clear NFC", "Remove writable NDEF data", Icons.Outlined.AutoDelete, "clear")
+        HomeFeature("Clear NFC", "Remove writable NDEF data", Icons.Outlined.AutoDelete, "clear"),
+        HomeFeature("Lock NFC", "Make a tag permanently read-only", Icons.Outlined.Lock, "lock")
     )
 
     LazyVerticalGrid(

@@ -8,7 +8,8 @@ enum class OperationType(val label: String) {
     QR_TO_NFC("QR → NFC"),
     NFC_TO_QR("NFC → QR"),
     COPY("Copy NFC"),
-    CLEAR("Clear NFC")
+    CLEAR("Clear NFC"),
+    LOCK("Lock NFC")
 }
 
 data class HistoryItem(
